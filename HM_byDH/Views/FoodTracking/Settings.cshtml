@@ -1,0 +1,35 @@
+﻿@using HM_byDH.Models.ViewModels
+@model UserSettingsViewModel
+@{
+    ViewData["Title"] = "Cài đặt nhắc nhở";
+}
+
+<h2>Cài đặt nhắc nhở</h2>
+<form asp-action="Settings" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="WaterReminderInterval">Nhắc nhở uống nước mỗi (giờ):</label>
+        <input asp-for="WaterReminderInterval" class="form-control" type="number" min="1" max="24" />
+        <span asp-validation-for="WaterReminderInterval" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DoNotDisturbStart">Bắt đầu không làm phiền:</label>
+        <input asp-for="DoNotDisturbStart" class="form-control" type="time" />
+        <span asp-validation-for="DoNotDisturbStart" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DoNotDisturbEnd">Kết thúc không làm phiền:</label>
+        <input asp-for="DoNotDisturbEnd" class="form-control" type="time" />
+        <span asp-validation-for="DoNotDisturbEnd" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Lưu</button>
+    <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,31 @@
+﻿@using HM_byDH.Models.ViewModels
+@model ProfileViewModel
+@{
+    ViewData["Title"] = "Hồ sơ người dùng";
+}
+
+<h2>Hồ sơ người dùng</h2>
+<div class="card">
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Họ và tên</dt>
+            <dd class="col-sm-9">@Model.FullName</dd>
+
+            <dt class="col-sm-3">Email</dt>
+            <dd class="col-sm-9">@Model.Email</dd>
+
+            <dt class="col-sm-3">Ngày sinh</dt>
+            <dd class="col-sm-9">@(Model.DateOfBirth?.ToString("dd/MM/yyyy") ?? "Chưa cập nhật")</dd>
+
+            <dt class="col-sm-3">Vai trò</dt>
+            <dd class="col-sm-9">@Model.Role</dd>
+
+            <dt class="col-sm-3">Chiều cao</dt>
+            <dd class="col-sm-9">@(Model.Height.HasValue ? $"{Model.Height} cm" : "Chưa cập nhật")</dd>
+
+            <dt class="col-sm-3">Cân nặng</dt>
+            <dd class="col-sm-9">@(Model.Weight.HasValue ? $"{Model.Weight} kg" : "Chưa cập nhật")</dd>
+        </dl>
+        <a asp-action="Edit" class="btn btn-primary">Chỉnh sửa hồ sơ</a>
+    </div>
+</div>

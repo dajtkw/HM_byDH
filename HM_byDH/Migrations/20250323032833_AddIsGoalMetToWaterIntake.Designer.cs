@@ -4,6 +4,7 @@ using HM_byDH.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HM_byDH.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250323032833_AddIsGoalMetToWaterIntake")]
+    partial class AddIsGoalMetToWaterIntake
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -157,35 +160,6 @@ namespace HM_byDH.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("FoodItems");
-                });
-
-            modelBuilder.Entity("HM_byDH.Models.UserSettings", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<TimeSpan>("DoNotDisturbEnd")
-                        .HasColumnType("time");
-
-                    b.Property<TimeSpan>("DoNotDisturbStart")
-                        .HasColumnType("time");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("WaterReminderInterval")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("UserSettings");
                 });
 
             modelBuilder.Entity("HM_byDH.Models.WaterIntake", b =>
@@ -364,17 +338,6 @@ namespace HM_byDH.Migrations
                         .IsRequired();
 
                     b.Navigation("FoodItem");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("HM_byDH.Models.UserSettings", b =>
-                {
-                    b.HasOne("HM_byDH.Models.ApplicationUser", "User")
-                        .WithOne()
-                        .HasForeignKey("HM_byDH.Models.UserSettings", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("User");
                 });

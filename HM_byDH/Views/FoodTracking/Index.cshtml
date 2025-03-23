@@ -1,0 +1,142 @@
+﻿@using HM_byDH.Models.ViewModels
+@model FoodTrackingViewModel
+@{
+    ViewData["Title"] = "Theo dõi chế độ ăn uống";
+}
+
+<h2>Theo dõi chế độ ăn uống - @Model.SelectedDate.ToString("dd/MM/yyyy")</h2>
+
+<div class="row mb-3">
+    <div class="col">
+        <form asp-action="Index" method="get">
+            <label>Chọn ngày:</label>
+            <input type="date" name="date" value="@Model.SelectedDate.ToString("yyyy-MM-dd")" onchange="this.form.submit()" class="form-control d-inline w-auto" />
+        </form>
+    </div>
+    <div class="col text-end">
+        <a asp-action="AddFoodEntry" class="btn btn-primary">Thêm món ăn</a>
+        <a asp-action="AddWaterIntake" class="btn btn-success">Thêm nước</a>
+        <a asp-action="FoodList" class="btn btn-info">Danh sách thực phẩm</a>
+        <a asp-action="Settings" class="btn btn-warning">Cài đặt nhắc nhở</a>
+    </div>
+</div>
+
+<div id="waterReminder" class="alert alert-warning" style="display:none;"></div>
+
+<h3>Thực phẩm</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Tên món</th>
+            <th>Số lượng (g)</th>
+            <th>Calo</th>
+            <th>Protein (g)</th>
+            <th>Fat (g)</th>
+            <th>Carb (g)</th>
+            <th>Thời gian</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var entry in Model.FoodEntries)
+        {
+            <tr>
+                <td>@entry.FoodName</td>
+                <td>@entry.Quantity</td>
+                <td>@entry.Calories.ToString("F1")</td>
+                <td>@entry.Protein.ToString("F1")</td>
+                <td>@entry.Fat.ToString("F1")</td>
+                <td>@entry.Carb.ToString("F1")</td>
+                <td>@entry.Date.ToString("HH:mm")</td>
+                <td>
+                    <a asp-action="EditFoodEntry" asp-route-id="@entry.Id" class="btn btn-sm btn-warning">Sửa</a>
+                    <form asp-action="DeleteFoodEntry" method="post" class="d-inline">
+                        <input type="hidden" name="id" value="@entry.Id" />
+                        <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>Tổng cộng</th>
+            <th></th>
+            <th>@Model.TotalCalories.ToString("F1")</th>
+            <th>@Model.TotalProtein.ToString("F1")</th>
+            <th>@Model.TotalFat.ToString("F1")</th>
+            <th>@Model.TotalCarb.ToString("F1")</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </tfoot>
+</table>
+
+<h3>Nước uống</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Lượng nước (ml)</th>
+            <th>Thời gian</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var intake in Model.WaterIntakes)
+        {
+            <tr>
+                <td>@intake.Amount</td>
+                <td>@intake.Date.ToString("HH:mm")</td>
+                <td>
+                    <a asp-action="EditWaterIntake" asp-route-id="@intake.Id" class="btn btn-sm btn-warning">Sửa</a>
+                    <form asp-action="DeleteWaterIntake" method="post" class="d-inline">
+                        <input type="hidden" name="id" value="@intake.Id" />
+                        <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>Tổng: @Model.TotalWater ml</th>
+            <th>Đã đủ 1.5L? <input type="checkbox" @(Model.IsWaterGoalMet ? "checked" : "") disabled /></th>
+            <th></th>
+        </tr>
+    </tfoot>
+</table>
+
+<h3>Biểu đồ tiêu thụ 7 ngày</h3>
+<canvas id="nutritionChart" width="400" height="200"></canvas>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="~/lib/signalr/signalr.min.js"></script>
+    <script>
+        var ctx = document.getElementById('nutritionChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [@Html.Raw(string.Join(",", Model.WeeklySummary.Keys.Select(k => $"'{k:dd/MM}'")))],
+                datasets: [
+                    { label: 'Calo', data: [@Html.Raw(string.Join(",", Model.WeeklySummary.Values.Select(v => v.Calories)))], backgroundColor: 'rgba(255, 99, 132, 0.5)' },
+                    { label: 'Protein', data: [@Html.Raw(string.Join(",", Model.WeeklySummary.Values.Select(v => v.Protein)))], backgroundColor: 'rgba(54, 162, 235, 0.5)' },
+                    { label: 'Fat', data: [@Html.Raw(string.Join(",", Model.WeeklySummary.Values.Select(v => v.Fat)))], backgroundColor: 'rgba(255, 206, 86, 0.5)' },
+                    { label: 'Carb', data: [@Html.Raw(string.Join(",", Model.WeeklySummary.Values.Select(v => v.Carb)))], backgroundColor: 'rgba(75, 192, 192, 0.5)' }
+                ]
+            },
+            options: { scales: { y: { beginAtZero: true } } }
+        });
+
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/waterReminderHub")
+            .build();
+
+        connection.on("ReceiveWaterReminder", function (message) {
+            $("#waterReminder").text(message).show();
+            setTimeout(() => $("#waterReminder").hide(), 5000);
+        });
+
+        connection.start().catch(err => console.error(err));
+    </script>
+}

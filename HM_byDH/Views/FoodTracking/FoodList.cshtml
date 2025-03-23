@@ -1,0 +1,31 @@
+﻿@using HM_byDH.Models.ViewModels;
+@model List<FoodItem>
+@{
+    ViewData["Title"] = "Danh sách thực phẩm";
+}
+
+<h2>Danh sách thực phẩm (trên 100g)</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Tên món</th>
+            <th>Calo</th>
+            <th>Protein (g)</th>
+            <th>Fat (g)</th>
+            <th>Carb (g)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Calories</td>
+                <td>@item.Protein</td>
+                <td>@item.Fat</td>
+                <td>@item.Carb</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a asp-action="Index" class="btn btn-secondary">Quay lại</a>

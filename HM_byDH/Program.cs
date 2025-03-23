@@ -11,7 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddTransient<HM_byDH.Services.IEmailSender, EmailSender>();
-
+builder.Services.AddSignalR();
+builder.Services.AddHostedService<WaterReminderService>(); // Thêm dịch vụ chạy nền
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
     // Cấu hình yêu cầu mật khẩu
