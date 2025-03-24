@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace HM_byDH.Models.ViewModels
+namespace HM_byDH.Models.ViewModels.Authentication
 {
     // Models/ViewModels/AccountViewModels.cs
     public class RegisterViewModel

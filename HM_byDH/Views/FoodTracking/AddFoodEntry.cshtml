@@ -1,4 +1,4 @@
-﻿@using HM_byDH.Models.ViewModels;
+﻿@using HM_byDH.Models.ViewModels.Meals;
 @model AddFoodEntryViewModel
 @{
     ViewData["Title"] = "Thêm món ăn";
@@ -22,7 +22,7 @@
     </div>
 
     <div class="form-group">
-        <label asp-for="Quantity"></label>
+        <label asp-for="Quantity">Số gram ước tính (g)</label>
         <input asp-for="Quantity" class="form-control" />
         <span asp-validation-for="Quantity" class="text-danger"></span>
     </div>

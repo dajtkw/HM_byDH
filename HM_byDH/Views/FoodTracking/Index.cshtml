@@ -1,4 +1,4 @@
-﻿@using HM_byDH.Models.ViewModels
+﻿@using HM_byDH.Models.ViewModels.Meals
 @model FoodTrackingViewModel
 @{
     ViewData["Title"] = "Theo dõi chế độ ăn uống";
@@ -15,7 +15,7 @@
     </div>
     <div class="col text-end">
         <a asp-action="AddFoodEntry" class="btn btn-primary">Thêm món ăn</a>
-        <a asp-action="AddWaterIntake" class="btn btn-success">Thêm nước</a>
+        <a asp-action="AddWaterIntake" class="btn btn-success">Đã uống nước?</a>
         <a asp-action="FoodList" class="btn btn-info">Danh sách thực phẩm</a>
         <a asp-action="Settings" class="btn btn-warning">Cài đặt nhắc nhở</a>
     </div>
@@ -76,7 +76,7 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Lượng nước (ml)</th>
+            <th>Đã uống đủ?</th>
             <th>Thời gian</th>
             <th></th>
         </tr>
@@ -85,7 +85,7 @@
         @foreach (var intake in Model.WaterIntakes)
         {
             <tr>
-                <td>@intake.Amount</td>
+                <td><input type="checkbox" @(intake.IsGoalMet ? "checked" : "") disabled /></td>
                 <td>@intake.Date.ToString("HH:mm")</td>
                 <td>
                     <a asp-action="EditWaterIntake" asp-route-id="@intake.Id" class="btn btn-sm btn-warning">Sửa</a>
@@ -99,8 +99,8 @@
     </tbody>
     <tfoot>
         <tr>
-            <th>Tổng: @Model.TotalWater ml</th>
-            <th>Đã đủ 1.5L? <input type="checkbox" @(Model.IsWaterGoalMet ? "checked" : "") disabled /></th>
+            <th>Đã đủ hôm nay? <input type="checkbox" @(Model.IsWaterGoalMet ? "checked" : "") disabled /></th>
+            <th></th>
             <th></th>
         </tr>
     </tfoot>

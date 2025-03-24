@@ -1,4 +1,4 @@
-﻿@using HM_byDH.Models.ViewModels
+﻿@using HM_byDH.Models.ViewModels.Meals
 @model AddWaterIntakeViewModel
 @{
     ViewData["Title"] = "Thêm nước uống";
@@ -9,14 +9,14 @@
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     <div class="form-group">
-        <label asp-for="Amount"></label>
-        <input asp-for="Amount" class="form-control" />
-        <span asp-validation-for="Amount" class="text-danger"></span>
+        <label asp-for="IsGoalMet">Đã uống đủ 1.5l nước hôm nay?</label>
+        <input asp-for="IsGoalMet" type="checkbox" />
+        <span asp-validation-for="IsGoalMet" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="Date"></label>
-        <input asp-for="Date" class="form-control" type="date" />
+        <input asp-for="Date" class="form-control" type="datetime-local" />
         <span asp-validation-for="Date" class="text-danger"></span>
     </div>
 

@@ -1,29 +1,18 @@
-﻿@using HM_byDH.Models.ViewModels
-@model EditFoodEntryViewModel
+﻿@using HM_byDH.Models.ViewModels.Meals
+@model EditWaterIntakeViewModel
 @{
-    ViewData["Title"] = "Sửa món ăn";
+    ViewData["Title"] = "Sửa nước uống";
 }
 
-<h2>Sửa món ăn</h2>
-<form asp-action="EditFoodEntry" method="post">
+<h2>Sửa nước uống</h2>
+<form asp-action="EditWaterIntake" method="post">
     <input type="hidden" asp-for="Id" />
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     <div class="form-group">
-        <label>Chọn món ăn</label>
-        <select asp-for="FoodItemId" class="form-control">
-            @foreach (var item in Model.FoodItems)
-            {
-                <option value="@item.Id">@item.Name</option>
-            }
-        </select>
-        <span asp-validation-for="FoodItemId" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Quantity"></label>
-        <input asp-for="Quantity" class="form-control" />
-        <span asp-validation-for="Quantity" class="text-danger"></span>
+        <label asp-for="IsGoalMet">Đã uống đủ nước hôm nay?</label>
+        <input asp-for="IsGoalMet" type="checkbox" />
+        <span asp-validation-for="IsGoalMet" class="text-danger"></span>
     </div>
 
     <div class="form-group">

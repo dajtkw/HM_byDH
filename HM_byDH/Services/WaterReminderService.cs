@@ -32,7 +32,7 @@ namespace HM_byDH.Services
                 foreach (var user in users)
                 {
                     var settings = await context.UserSettings.FirstOrDefaultAsync(us => us.UserId == user.Id, stoppingToken)
-                        ?? new UserSettings { UserId = user.Id }; // Mặc định nếu chưa có
+                        ?? new UserSettings { UserId = user.Id };
 
                     var currentTime = now.TimeOfDay;
                     var isDoNotDisturb = currentTime >= settings.DoNotDisturbStart || currentTime <= settings.DoNotDisturbEnd;
@@ -40,17 +40,16 @@ namespace HM_byDH.Services
 
                     var lastReminder = now.AddHours(-settings.WaterReminderInterval);
                     var waterToday = await context.WaterIntakes
-                        .Where(wi => wi.UserId == user.Id && wi.Date.Date == now.Date && wi.Date > lastReminder)
-                        .SumAsync(wi => wi.Amount, stoppingToken);
+                        .AnyAsync(wi => wi.UserId == user.Id && wi.Date.Date == now.Date && wi.IsGoalMet, stoppingToken);
 
-                    if (waterToday < 1500 && now.Minute == 0) // Nhắc mỗi giờ tròn
+                    if (!waterToday && now.Minute == 0)
                     {
                         await _hubContext.Clients.User(user.Id)
-                            .SendAsync("ReceiveWaterReminder", "Đã đến giờ nhắc nhở! Bạn chưa uống đủ 1.5L nước hôm nay.");
+                            .SendAsync("ReceiveWaterReminder", "Đã đến giờ nhắc nhở! Bạn chưa uống đủ nước hôm nay.");
                     }
                 }
 
-                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken); // Kiểm tra mỗi phút
+                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
             }
         }
     }

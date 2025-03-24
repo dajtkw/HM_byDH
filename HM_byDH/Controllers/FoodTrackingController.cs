@@ -1,10 +1,10 @@
 ﻿using HM_byDH.Data;
-using HM_byDH.Models.ViewModels;
 using HM_byDH.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using HM_byDH.Models.ViewModels.Meals;
 
 namespace HM_byDH.Controllers
 {
@@ -56,12 +56,11 @@ namespace HM_byDH.Controllers
                 WaterIntakes = waterIntakes.Select(wi => new WaterIntakeViewModel
                 {
                     Id = wi.Id,
-                    Amount = wi.Amount,
                     IsGoalMet = wi.IsGoalMet,
                     Date = wi.Date
                 }).ToList(),
                 SelectedDate = selectedDate,
-                IsWaterGoalMet = waterIntakes.Sum(wi => wi.Amount) >= 1500,
+                IsWaterGoalMet = waterIntakes.Any(wi => wi.IsGoalMet),
                 WeeklySummary = weeklyFoodEntries
                     .GroupBy(fe => fe.Date.Date)
                     .ToDictionary(
@@ -79,7 +78,6 @@ namespace HM_byDH.Controllers
             model.TotalProtein = model.FoodEntries.Sum(fe => fe.Protein);
             model.TotalFat = model.FoodEntries.Sum(fe => fe.Fat);
             model.TotalCarb = model.FoodEntries.Sum(fe => fe.Carb);
-            model.TotalWater = model.WaterIntakes.Sum(wi => wi.Amount);
 
             return View(model);
         }
@@ -191,16 +189,11 @@ namespace HM_byDH.Controllers
             if (ModelState.IsValid)
             {
                 var user = await _userManager.GetUserAsync(User);
-                var totalWaterToday = await _context.WaterIntakes
-                    .Where(wi => wi.UserId == user.Id && wi.Date.Date == model.Date.Date)
-                    .SumAsync(wi => wi.Amount);
-
                 var waterIntake = new WaterIntake
                 {
                     UserId = user.Id,
-                    Amount = model.Amount,
                     Date = model.Date,
-                    IsGoalMet = (totalWaterToday + model.Amount) >= 1500
+                    IsGoalMet = model.IsGoalMet
                 };
                 _context.WaterIntakes.Add(waterIntake);
                 await _context.SaveChangesAsync();
@@ -219,7 +212,7 @@ namespace HM_byDH.Controllers
             var model = new EditWaterIntakeViewModel
             {
                 Id = intake.Id,
-                Amount = intake.Amount,
+                IsGoalMet = intake.IsGoalMet,
                 Date = intake.Date
             };
             return View(model);
@@ -235,11 +228,8 @@ namespace HM_byDH.Controllers
                     .FirstOrDefaultAsync(wi => wi.Id == model.Id && wi.UserId == _userManager.GetUserId(User));
                 if (intake == null) return NotFound();
 
-                intake.Amount = model.Amount;
+                intake.IsGoalMet = model.IsGoalMet; 
                 intake.Date = model.Date;
-                intake.IsGoalMet = await _context.WaterIntakes
-                    .Where(wi => wi.UserId == intake.UserId && wi.Date.Date == model.Date.Date)
-                    .SumAsync(wi => wi.Amount) >= 1500;
                 _context.WaterIntakes.Update(intake);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index", new { date = model.Date });

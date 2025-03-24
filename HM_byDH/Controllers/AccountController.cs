@@ -1,5 +1,5 @@
 ﻿using HM_byDH.Models;
-using HM_byDH.Models.ViewModels;
+using HM_byDH.Models.ViewModels.Authentication;
 using HM_byDH.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

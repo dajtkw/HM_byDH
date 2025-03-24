@@ -1,4 +1,4 @@
-﻿namespace HM_byDH.Models.ViewModels
+﻿namespace HM_byDH.Models.ViewModels.Meals
 {
     public class FoodEntryViewModel
     {

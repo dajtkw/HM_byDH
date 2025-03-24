@@ -3,6 +3,7 @@ using HM_byDH.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using HM_byDH.Models.ViewModels.Profile;
 
 namespace HM_byDH.Controllers
 {
