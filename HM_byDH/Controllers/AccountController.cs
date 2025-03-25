@@ -114,7 +114,7 @@ namespace HM_byDH.Controllers
                 {
                     return RedirectToAction("Index", "Home");
                 }
-                ModelState.AddModelError(string.Empty, "Đăng nhập không thành công.");
+                ModelState.AddModelError(string.Empty, "Đăng nhập không thành công. Kiểm tra lại email hoặc password");
             }
             return View(model);
         }

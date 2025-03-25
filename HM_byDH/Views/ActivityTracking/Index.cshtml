@@ -1,0 +1,58 @@
+﻿@using HM_byDH.Models.ViewModels.Activities
+@model ActivityTrackingViewModel
+<h2>Theo dõi hoạt động thể chất - @Model.SelectedDate.ToString("dd/MM/yyyy")</h2>
+
+<div class="row mb-3">
+    <div class="col">
+        <form asp-action="Index" method="get">
+            <label>Chọn ngày:</label>
+            <input type="date" name="date" value="@Model.SelectedDate.ToString("yyyy-MM-dd")" onchange="this.form.submit()" class="form-control d-inline w-auto" />
+        </form>
+    </div>
+    <div class="col text-end">
+        <a asp-action="AddActivityEntry" class="btn btn-primary">Thêm hoạt động</a>
+        <a asp-action="SetActivityGoal" class="btn btn-success">Đặt mục tiêu</a>
+    </div>
+</div>
+
+<h3>Hoạt động thể chất</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Hoạt động</th>
+            <th>Thời gian (phút)</th>
+            <th>Calo đốt cháy</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var entry in Model.ActivityEntries)
+        {
+            <tr>
+                <td>@entry.ActivityName</td>
+                <td>@entry.Duration</td>
+                <td>@entry.CaloriesBurned.ToString("F1")</td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>Tổng cộng</th>
+            <th></th>
+            <th>@Model.TotalCaloriesBurned.ToString("F1")</th>
+        </tr>
+    </tfoot>
+</table>
+
+@if (Model.DailyGoal != null)
+{
+    <h3>Mục tiêu hàng ngày</h3>
+    <p>Mục tiêu: @Model.DailyGoal.TargetCalories calo</p>
+    <p>Đã đạt: @Model.DailyGoal.CurrentCalories.ToString("F1") calo (@((Model.DailyGoal.CurrentCalories / Model.DailyGoal.TargetCalories * 100).ToString("F1"))%)</p>
+}
+
+@if (Model.WeeklyGoal != null)
+{
+    <h3>Mục tiêu hàng tuần</h3>
+    <p>Mục tiêu: @Model.WeeklyGoal.TargetCalories calo</p>
+    <p>Đã đạt: @Model.WeeklyGoal.CurrentCalories.ToString("F1") calo (@((Model.WeeklyGoal.CurrentCalories / Model.WeeklyGoal.TargetCalories * 100).ToString("F1"))%)</p>
+}

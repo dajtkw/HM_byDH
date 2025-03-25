@@ -15,7 +15,10 @@ namespace HM_byDH.Data
         public DbSet<FoodItem> FoodItems { get; set; }
         public DbSet<FoodEntry> FoodEntries { get; set; }
         public DbSet<WaterIntake> WaterIntakes { get; set; }
-        public DbSet<UserSettings> UserSettings { get; set; } // Thêm DbSet cho UserSettings
+        public DbSet<UserSettings> UserSettings { get; set; }
+        public DbSet<ActivityType> ActivityTypes { get; set; }
+        public DbSet<ActivityEntry> ActivityEntries { get; set; }
+        public DbSet<ActivityGoal> ActivityGoals { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -44,6 +47,24 @@ namespace HM_byDH.Data
             .WithOne()
             .HasForeignKey<UserSettings>(us => us.UserId)
             .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ActivityEntry>()
+            .HasOne(ae => ae.User)
+            .WithMany()
+            .HasForeignKey(ae => ae.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ActivityEntry>()
+                .HasOne(ae => ae.ActivityType)
+                .WithMany()
+                .HasForeignKey(ae => ae.ActivityTypeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ActivityGoal>()
+                .HasOne(ag => ag.User)
+                .WithMany()
+                .HasForeignKey(ag => ag.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

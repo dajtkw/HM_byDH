@@ -1,0 +1,18 @@
+﻿@using HM_byDH.Models.ViewModels.Activities
+@model SetActivityGoalViewModel
+<h2>Đặt mục tiêu luyện tập</h2>
+<form asp-action="SetActivityGoal" method="post">
+    <div class="form-group">
+        <label>Loại mục tiêu</label>
+        <select asp-for="GoalType" class="form-control">
+            <option value="Daily">Hàng ngày</option>
+            <option value="Weekly">Hàng tuần</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Mục tiêu calo đốt cháy</label>
+        <input asp-for="TargetCalories" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Lưu</button>
+    <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+</form>
