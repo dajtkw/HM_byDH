@@ -1,47 +1,86 @@
 ﻿@using HM_byDH.Models.ViewModels.Activities
 @model ActivityTrackingViewModel
-<h2>Theo dõi hoạt động thể chất - @Model.SelectedDate.ToString("dd/MM/yyyy")</h2>
 
-<div class="row mb-3">
-    <div class="col">
-        <form asp-action="Index" method="get">
-            <label>Chọn ngày:</label>
-            <input type="date" name="date" value="@Model.SelectedDate.ToString("yyyy-MM-dd")" onchange="this.form.submit()" class="form-control d-inline w-auto" />
-        </form>
-    </div>
-    <div class="col text-end">
-        <a asp-action="AddActivityEntry" class="btn btn-primary">Thêm hoạt động</a>
-        <a asp-action="SetActivityGoal" class="btn btn-success">Đặt mục tiêu</a>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <h2>Theo dõi hoạt động thể chất - @Model.SelectedDate.ToString("dd/MM/yyyy")</h2>
+
+            <div class="row mb-3">
+                <div class="col">
+                    <form asp-action="Index" method="get">
+                        <label>Chọn ngày:</label>
+                        <input type="text" name="date" id="indexDatePicker" class="form-control d-inline w-auto" />
+                    </form>
+                </div>
+                <div class="col text-end">
+                    <a asp-action="AddActivityEntry" class="btn btn-primary">Thêm hoạt động</a>
+                    <a asp-action="SetActivityGoal" class="btn btn-success">Đặt mục tiêu</a>
+                </div>
+            </div>
+
+            <h3>Hoạt động thể chất</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Hoạt động</th>
+                        <th>Thời gian (phút)</th>
+                        <th>Mức cường độ</th> <!-- Thêm cột Intensity -->
+                        <th>Calo đốt cháy</th>
+                        <th></th> <!-- Cột cho nút Sửa -->
+                        <th></th> <!-- Cột cho nút Xóa -->
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var entry in Model.ActivityEntries)
+                    {
+                        <tr>
+                            <td>@entry.ActivityName</td>
+                            <td>@entry.Duration</td>
+                            <td>@entry.Intensity</td> <!-- Hiển thị giá trị Intensity -->
+                            <td>@entry.CaloriesBurned.ToString("F1")</td>
+                            <td>
+                                <a asp-action="EditActivityEntry" asp-route-id="@entry.Id" @*Liên kết đến action xóa với ID của mục hoạt động. *@
+                                   class="btn btn-warning btn-sm">Sửa</a>
+                            </td>
+                            <td>
+                                <form asp-action="DeleteActivityEntry" asp-route-id="@entry.Id" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa hoạt động này?');">Xóa</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>Tổng cộng</th>
+                        <th></th>
+                        <th></th> <!-- Thêm ô trống cho cột Intensity -->
+                        <th>@Model.TotalCaloriesBurned.ToString("F1")</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+
+        </div>
     </div>
 </div>
 
-<h3>Hoạt động thể chất</h3>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Hoạt động</th>
-            <th>Thời gian (phút)</th>
-            <th>Calo đốt cháy</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var entry in Model.ActivityEntries)
-        {
-            <tr>
-                <td>@entry.ActivityName</td>
-                <td>@entry.Duration</td>
-                <td>@entry.CaloriesBurned.ToString("F1")</td>
-            </tr>
-        }
-    </tbody>
-    <tfoot>
-        <tr>
-            <th>Tổng cộng</th>
-            <th></th>
-            <th>@Model.TotalCaloriesBurned.ToString("F1")</th>
-        </tr>
-    </tfoot>
-</table>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        flatpickr("#indexDatePicker", {
+            dateFormat: "Y-m-d",
+            altInput: true,
+            altFormat: "d/m/Y",
+            defaultDate: "@Model.SelectedDate.ToString("yyyy-MM-dd")",
+            locale: "vi",
+            onChange: function(selectedDates, dateStr, instance) {
+                instance.element.closest('form').submit();
+            }
+        });
+    });
+</script>
 
 @if (Model.DailyGoal != null)
 {
@@ -56,3 +95,34 @@
     <p>Mục tiêu: @Model.WeeklyGoal.TargetCalories calo</p>
     <p>Đã đạt: @Model.WeeklyGoal.CurrentCalories.ToString("F1") calo (@((Model.WeeklyGoal.CurrentCalories / Model.WeeklyGoal.TargetCalories * 100).ToString("F1"))%)</p>
 }
+
+
+@if (Model.IsDailyGoalAchieved)
+{
+    <div class="goal-notification" id="dailyGoalNotification">
+        <div class="goal-content">
+            <h3>🎉 Chúc mừng bạn!</h3>
+            <p>Bạn đã đốt cháy <strong>@Model.DailyGoal.CurrentCalories</strong> calo và hoàn thành mục tiêu ngày!</p>
+            <button class="btn btn-success" onclick="hideNotification('dailyGoalNotification')">Tiếp tục nào!</button>
+        </div>
+    </div>
+}
+
+<!-- Thông báo mục tiêu tuần -->
+@if (Model.IsWeeklyGoalAchieved)
+{
+    <div class="goal-notification" id="weeklyGoalNotification">
+        <div class="goal-content">
+            <h3>🏆 Thành tích tuyệt vời!</h3>
+            <p>Bạn đã vượt qua mục tiêu tuần với <strong>@Model.WeeklyGoal.CurrentCalories</strong> calo!</p>
+            <button class="btn btn-success" onclick="hideNotification('weeklyGoalNotification')">Tuyệt vời!</button>
+        </div>
+    </div>
+}
+
+<!-- Script để ẩn thông báo -->
+<script>
+    function hideNotification(id) {
+        document.getElementById(id).style.display = 'none';
+    }
+</script>

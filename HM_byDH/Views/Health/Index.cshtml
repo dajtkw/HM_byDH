@@ -1,0 +1,51 @@
+﻿@using HM_byDH.Models.ViewModels.Weight
+@model HealthDashboardViewModel
+
+<h2>Tiến độ sức khỏe</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <p><strong>Cân nặng hiện tại:</strong> @Model.CurrentWeight kg</p>
+        <p><strong>Chiều cao:</strong> @Model.Height m</p>
+        <p><strong>Mục tiêu cân nặng:</strong> @Model.TargetWeight kg</p>
+        <p><strong>BMI:</strong> @Model.BMI.ToString("F2")</p>
+        <p><strong>Tiến trình:</strong> @Model.ProgressPercentage.ToString("F2")%</p>
+        @if (Model.Goal != null)
+        {
+            <p><strong>Calo cần thiết mỗi ngày:</strong> @Model.DailyCaloriesTarget.ToString("F0") calo</p>
+        }
+        <div>
+            <a asp-action="AddWeightLog" class="btn btn-primary">Thêm nhật ký cân nặng</a>
+            <a asp-action="SetWeightGoal" class="btn btn-success">Đặt mục tiêu cân nặng</a>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <canvas id="weightChart" width="400" height="200"></canvas>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('weightChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [@Html.Raw(string.Join(",", Model.WeightLogs.Select(w => $"'{w.Date:dd/MM}'")))],
+                datasets: [{
+                    label: 'Cân nặng (kg)',
+                    data: [@Html.Raw(string.Join(",", Model.WeightLogs.Select(w => w.Weight)))],
+                    borderColor: 'blue',
+                    fill: false
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: false
+                    }
+                }
+            }
+        });
+    </script>
+}

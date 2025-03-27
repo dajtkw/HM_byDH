@@ -14,6 +14,7 @@ namespace HM_byDH.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
+
         public ActivityTrackingController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
@@ -45,7 +46,8 @@ namespace HM_byDH.Controllers
                     ActivityName = ae.ActivityType.Name,
                     Duration = ae.Duration,
                     CaloriesBurned = ae.CaloriesBurned,
-                    Date = ae.Date
+                    Date = ae.Date,
+                    Intensity = ae.Intensity
                 }).ToList(),
                 SelectedDate = selectedDate,
                 DailyGoal = dailyGoal != null ? new ActivityGoalViewModel
@@ -65,6 +67,17 @@ namespace HM_byDH.Controllers
             };
 
             model.TotalCaloriesBurned = model.ActivityEntries.Sum(ae => ae.CaloriesBurned);
+
+            // Kiểm tra xem người dùng đã đạt được mục tiêu hay chưa
+            if (model.DailyGoal != null)
+            {
+                model.IsDailyGoalAchieved = model.DailyGoal.CurrentCalories >= model.DailyGoal.TargetCalories;
+            }
+            if (model.WeeklyGoal != null)
+            {
+                model.IsWeeklyGoalAchieved = model.WeeklyGoal.CurrentCalories >= model.WeeklyGoal.TargetCalories;
+            }
+
             return View(model);
         }
 
@@ -81,10 +94,10 @@ namespace HM_byDH.Controllers
         }
 
         
+
         [HttpPost]
         public async Task<IActionResult> AddActivityEntry(AddActivityEntryViewModel model)
         {
-            Console.WriteLine($"ActivityTypeId: {model.ActivityTypeId}");   
 
             if (!ModelState.IsValid)
             {
@@ -101,12 +114,28 @@ namespace HM_byDH.Controllers
                 {
                     return RedirectToAction("Login", "Account"); // Hoặc xử lý lỗi phù hợp
                 }
+
+                // Lấy thông tin ActivityType từ database
+                var activityType = await _context.ActivityTypes.FindAsync(model.ActivityTypeId);
+                if (activityType == null)
+                {
+                    ModelState.AddModelError("", "Loại hoạt động không hợp lệ.");
+                    model.ActivityTypes = await _context.ActivityTypes.ToListAsync();
+                    return View(model);
+                }
+
+                
+
+                double caloriesBurned = CalculateCaloriesBurned(model.Duration, activityType.CaloriesPerMinute, model.Intensity);
+
                 var activityEntry = new ActivityEntry
                 {
                     UserId = user.Id,
                     ActivityTypeId = model.ActivityTypeId,
                     Duration = model.Duration,
-                    Date = model.Date
+                    Date = model.Date,
+                    Intensity = model.Intensity, 
+                    CaloriesBurned = caloriesBurned // Lưu giá trị calo đốt cháy
                 };
                 
                 try
@@ -119,11 +148,10 @@ namespace HM_byDH.Controllers
                 {
                     Console.WriteLine(ex.Message); // Ghi log lỗi
                     ModelState.AddModelError("", "Có lỗi khi lưu dữ liệu.");
-                    model.ActivityTypes = await _context.ActivityTypes.ToListAsync();
-                    return View(model);
+                    
                 }
             }
-
+            // Nếu không hợp lệ, điền lại danh sách ActivityTypes
             model.ActivityTypes = await _context.ActivityTypes.ToListAsync();
             return View(model);
         }
@@ -164,6 +192,87 @@ namespace HM_byDH.Controllers
                 return RedirectToAction("Index");
             }
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditActivityEntry(int id)
+        {
+            var entry = await _context.ActivityEntries
+                .Include(ae => ae.ActivityType) 
+                .FirstOrDefaultAsync(ae => ae.Id == id);
+
+            if (entry == null) return NotFound();
+
+            var model = new EditActivityEntryViewModel
+            {
+                Id = entry.Id,
+                ActivityTypeId = entry.ActivityTypeId,
+                Duration = entry.Duration,
+                Date = entry.Date,
+                Intensity = entry.Intensity,
+                CaloriesBurned = entry.CaloriesBurned,
+                ActivityTypes = await _context.ActivityTypes.ToListAsync()
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditActivityEntry(EditActivityEntryViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var entry = await _context.ActivityEntries
+                    .Include(ae => ae.ActivityType)
+                    .FirstOrDefaultAsync(ae => ae.Id == model.Id);
+                if (entry == null) return NotFound();
+
+                if (entry.ActivityType == null)
+                {
+                    ModelState.AddModelError("", "Loại hoạt động không hợp lệ.");
+                    model.ActivityTypes = await _context.ActivityTypes.ToListAsync();
+                    return View(model);
+                }
+
+                double caloriesPerMinute = entry.ActivityType.CaloriesPerMinute;
+                double caloriesBurned = CalculateCaloriesBurned(model.Duration, caloriesPerMinute, model.Intensity);
+
+                entry.ActivityTypeId = model.ActivityTypeId;
+                entry.Duration = model.Duration;
+                entry.Date = model.Date;
+                entry.Intensity = model.Intensity;
+                entry.CaloriesBurned = caloriesBurned;
+
+                _context.Update(entry);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            model.ActivityTypes = await _context.ActivityTypes.ToListAsync();
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteActivityEntry(int id)
+        {
+            var entry = await _context.ActivityEntries.FindAsync(id);
+            if (entry != null)
+            {
+                _context.ActivityEntries.Remove(entry);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction("Index");
+        }
+
+
+        public static double CalculateCaloriesBurned(double duration, double caloriesPerMinute, string intensity)
+        {
+            double intensityFactor = intensity switch
+            {
+                "Nhẹ" => 0.8,
+                "Vừa" => 1.0,
+                "Mạnh" => 1.2,
+                _ => 1.0 // Giá trị mặc định nếu không hợp lệ
+            };
+            return duration * caloriesPerMinute * intensityFactor;
         }
     }
 }

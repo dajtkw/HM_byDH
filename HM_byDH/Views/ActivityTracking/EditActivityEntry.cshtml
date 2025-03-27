@@ -1,20 +1,19 @@
-﻿@model HM_byDH.Models.ViewModels.Activities.AddActivityEntryViewModel
-
-
+﻿@model HM_byDH.Models.ViewModels.Activities.EditActivityEntryViewModel
 
 <div class="container">
     <div class="row">
         <div class="col-md-6 offset-md-3">
-            <h2>Thêm hoạt động thể chất</h2>
-            @using (Html.BeginForm("AddActivityEntry", "ActivityTracking", FormMethod.Post))
+            <h2>Chỉnh sửa hoạt động</h2>
+            @using (Html.BeginForm("EditActivityEntry", "ActivityTracking", FormMethod.Post))
             {
+                <input type="hidden" asp-for="Id" />
                 <div asp-validation-summary="All" class="text-danger"></div>
 
                 <div class="form-group">
                     <label>Chọn hoạt động</label>
                     @if (Model.ActivityTypes != null && Model.ActivityTypes.Any())
                     {
-                        @Html.DropDownListFor(m => m.ActivityTypeId, new SelectList(Model.ActivityTypes, "Id", "Name"), "Chọn hoạt động", new { @class = "form-control" })
+                        @Html.DropDownListFor(m => m.ActivityTypeId, new SelectList(Model.ActivityTypes, "Id", "Name", Model.ActivityTypeId), "Chọn hoạt động", new { @class = "form-control", id = "ActivityTypeId" })
                     }
                     else
                     {
@@ -25,16 +24,15 @@
 
                 <div class="form-group">
                     <label>Thời gian (phút)</label>
-                    @Html.TextBoxFor(m => m.Duration, new { @class = "form-control" })
+                    @Html.TextBoxFor(m => m.Duration, new { @class = "form-control", id = "Duration" })
                     <span asp-validation-for="Duration" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
                     <label>Ngày</label>
-                    @Html.TextBoxFor(m => m.Date, "{0:yyyy-MM-dd}", new { @class = "form-control", @type = "text", id = "datePicker" })                    <span asp-validation-for="Date" class="text-danger"></span>
+                    @Html.TextBoxFor(m => m.Date, "{0:yyyy-MM-dd}", new { @class = "form-control", @type = "date", id = "datePicker", value = Model.Date.ToString("yyyy-MM-dd") })
+                    <span asp-validation-for="Date" class="text-danger"></span>
                 </div>
-
-
 
                 <div class="form-group">
                     <label>Mức cường độ</label>
@@ -43,24 +41,23 @@
                 new SelectListItem { Value = "Nhẹ", Text = "Nhẹ" },
                 new SelectListItem { Value = "Vừa", Text = "Vừa" },
                 new SelectListItem { Value = "Mạnh", Text = "Mạnh" }
-                }, "Chọn mức cường độ", new { @class = "form-control" })
+                }, "Chọn mức cường độ", new { @class = "form-control", id = "Intensity" })
                     <span asp-validation-for="Intensity" class="text-danger"></span>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Thêm</button>
+                <button type="submit" class="btn btn-primary">Lưu</button>
                 <a asp-action="Index" class="btn btn-secondary">Hủy</a>
             }
         </div>
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        flatpickr("#datePicker", {
-            dateFormat: "d/m/Y",
-            defaultDate: "today",
-            locale: "vi"
-        });
+    flatpickr("#datePicker", {
+        dateFormat: "d/m/Y",
+        defaultDate: "@Model.Date.ToString("dd/MM/yyyy")",
+        locale: "vi"
     });
 </script>
 
@@ -69,7 +66,8 @@
         const activity = document.getElementById('ActivityTypeId').value;
         const duration = document.getElementById('Duration').value;
         const date = document.getElementById('datePicker').value;
-        if (!activity || !duration || !date) {
+        const intensity = document.getElementById('Intensity').value;
+        if (!activity || !duration || !date || !intensity) {
             e.preventDefault();
             alert('Vui lòng điền đầy đủ các trường bắt buộc!');
         }

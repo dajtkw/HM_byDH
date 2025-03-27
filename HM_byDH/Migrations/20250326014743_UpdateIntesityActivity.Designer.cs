@@ -4,6 +4,7 @@ using HM_byDH.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HM_byDH.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250326014743_UpdateIntesityActivity")]
+    partial class UpdateIntesityActivity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,10 +44,6 @@ namespace HM_byDH.Migrations
 
                     b.Property<double>("Duration")
                         .HasColumnType("float");
-
-                    b.Property<string>("Intensity")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -105,31 +104,6 @@ namespace HM_byDH.Migrations
                     b.ToTable("ActivityTypes");
                 });
 
-            modelBuilder.Entity("HM_byDH.Models.Advice", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Goal")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Advices");
-                });
-
             modelBuilder.Entity("HM_byDH.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -141,9 +115,6 @@ namespace HM_byDH.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("CurrentWeight")
-                        .HasColumnType("float");
 
                     b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("datetime2");
@@ -270,32 +241,6 @@ namespace HM_byDH.Migrations
                     b.ToTable("FoodItems");
                 });
 
-            modelBuilder.Entity("HM_byDH.Models.Reminder", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("Time")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Reminders");
-                });
-
             modelBuilder.Entity("HM_byDH.Models.UserSettings", b =>
                 {
                     b.Property<int>("Id")
@@ -348,65 +293,6 @@ namespace HM_byDH.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("WaterIntakes");
-                });
-
-            modelBuilder.Entity("HM_byDH.Models.WeightGoals+WeightGoal", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<double>("DailyCaloriesTarget")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double>("InitialWeight")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double>("TargetWeight")
-                        .HasColumnType("float");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("WeightGoals");
-                });
-
-            modelBuilder.Entity("HM_byDH.Models.WeightLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<double>("Weight")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("WeightLogs");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -591,17 +477,6 @@ namespace HM_byDH.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("HM_byDH.Models.Reminder", b =>
-                {
-                    b.HasOne("HM_byDH.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("HM_byDH.Models.UserSettings", b =>
                 {
                     b.HasOne("HM_byDH.Models.ApplicationUser", "User")
@@ -614,28 +489,6 @@ namespace HM_byDH.Migrations
                 });
 
             modelBuilder.Entity("HM_byDH.Models.WaterIntake", b =>
-                {
-                    b.HasOne("HM_byDH.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("HM_byDH.Models.WeightGoals+WeightGoal", b =>
-                {
-                    b.HasOne("HM_byDH.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("HM_byDH.Models.WeightLog", b =>
                 {
                     b.HasOne("HM_byDH.Models.ApplicationUser", "User")
                         .WithMany()

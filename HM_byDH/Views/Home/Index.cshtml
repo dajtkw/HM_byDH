@@ -1,6 +1,103 @@
-﻿@model string
+﻿@using HM_byDH.Models.ViewModels.Home
+@model HomeViewModel
+
 @{
     ViewData["Title"] = "Trang chủ";
 }
+
 <h1>Chào mừng đến với HealthApp</h1>
-<p>Ứng dụng giúp bạn theo dõi sức khỏe và lối sống.</p>
+
+@if (Model.IsLoggedIn)
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Xin chào, @Model.UserName!</h2>
+                <p><strong>Cân nặng hiện tại:</strong> @Model.CurrentWeight.ToString("F1") kg</p>
+                @if (Model.TargetWeight > 0)
+                {
+                    <p><strong>Mục tiêu cân nặng:</strong> @Model.TargetWeight.ToString("F1") kg</p>
+                    <p><strong>Tiến trình:</strong> @Model.ProgressPercentage.ToString("F1")%</p>
+                    <p><strong>Calo cần thiết mỗi ngày:</strong> @Model.DailyCaloriesTarget.ToString("F0") calo</p>
+                }
+                <p><strong>Tổng calo đốt cháy tuần này:</strong> @Model.TotalCaloriesBurnedThisWeek.ToString("F1") calo</p>
+
+                <!-- Lời khuyên động viên -->
+                @if (Model.ProgressPercentage >= 75)
+                {
+                    <div class="alert alert-success">Tuyệt vời! Bạn sắp đạt được mục tiêu của mình rồi!</div>
+                }
+                else if (Model.ProgressPercentage > 0)
+                {
+                    <div class="alert alert-info">Tiếp tục cố gắng nhé, bạn đang đi đúng hướng!</div>
+                }
+            </div>
+            <div class="col-md-6">
+                <!-- Biểu đồ tiến trình -->
+                <h4>Tiến trình mục tiêu</h4>
+                <canvas id="progressChart"></canvas>
+
+                <!-- Biểu đồ xu hướng cân nặng -->
+                <h4 class="mt-4">Xu hướng cân nặng</h4>
+                <canvas id="weightTrendChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Biểu đồ doughnut cho tiến trình
+        var ctxProgress = document.getElementById('progressChart').getContext('2d');
+        var progressChart = new Chart(ctxProgress, {
+            type: 'doughnut',
+            data: {
+                labels: ['Hoàn thành', 'Còn lại'],
+                datasets: [{
+                    data: [@Model.ProgressPercentage, 100 - @Model.ProgressPercentage],
+                    backgroundColor: ['#36A2EB', '#FFCE56']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+
+        // Biểu đồ đường cho xu hướng cân nặng
+        var ctxWeightTrend = document.getElementById('weightTrendChart').getContext('2d');
+        var weightTrendChart = new Chart(ctxWeightTrend, {
+            type: 'line',
+            data: {
+                labels: [@Html.Raw(string.Join(",", Model.WeightLogs.Select(w => $"'{w.Date:dd/MM}'")))],
+                datasets: [{
+                    label: 'Cân nặng (kg)',
+                    data: [@Html.Raw(string.Join(",", Model.WeightLogs.Select(w => w.Weight)))],
+                    borderColor: 'blue',
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        title: {
+                            display: true,
+                            text: 'Cân nặng (kg)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Ngày'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+}
+else
+{
+    <p>Ứng dụng giúp bạn theo dõi sức khỏe và lối sống. Vui lòng <a asp-action="Login" asp-controller="Account">đăng nhập</a> để bắt đầu.</p>
+}

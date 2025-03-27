@@ -7,5 +7,6 @@
         public double Duration { get; set; }
         public double CaloriesBurned { get; set; }
         public DateTime Date { get; set; }
+        public string Intensity { get; set; } 
     }
 }

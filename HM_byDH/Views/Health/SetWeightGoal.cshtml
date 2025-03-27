@@ -1,0 +1,28 @@
+﻿@using HM_byDH.Models.ViewModels.Weight
+@model SetWeightGoalViewModel
+
+<h2>Đặt Mục Tiêu Cân Nặng</h2>
+<form asp-action="SetWeightGoal" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="CurrentWeight">Cân nặng hiện tại (kg)</label>
+        <input asp-for="CurrentWeight" class="form-control" step="0.1" value="@Model.CurrentWeight" readonly />
+        <span asp-validation-for="CurrentWeight" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="TargetWeight">Cân nặng mục tiêu (kg)</label>
+        <input asp-for="TargetWeight" class="form-control" step="0.1" required />
+        <span asp-validation-for="TargetWeight" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="EndDate">Thời gian dự kiến hoàn thành</label>
+        <input asp-for="EndDate" class="form-control" type="date" value="@DateTime.Today.ToString("yyyy-MM-dd")" required /> 
+
+        <span asp-validation-for="EndDate" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Lưu</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -6,6 +6,9 @@
     <title>@ViewData["Title"] - HealthApp</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    
 </head>
 <body>
     <header>
@@ -31,8 +34,11 @@
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="ActivityTracking" asp-action="Index">Theo dõi hoạt động</a>
                             </li>
+                            @* <li class="nav-item"> *@
+                            @*     <a class="nav-link" asp-controller="FoodTracking" asp-action="Settings">Cài đặt nhắc nhở</a> *@
+                            @* </li> *@
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="FoodTracking" asp-action="Settings">Cài đặt nhắc nhở</a>
+                                <a class="nav-link" asp-controller="Health" asp-action="Index">Theo dõi cân nặng</a>
                             </li>
                         }
                     </ul>
@@ -78,6 +84,8 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

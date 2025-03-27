@@ -8,8 +8,9 @@
         public int ActivityTypeId { get; set; }
         public double Duration { get; set; } // Thời gian (phút)
         public DateTime Date { get; set; }
+        public string Intensity { get; set; }
         public ApplicationUser User { get; set; }
         public ActivityType ActivityType { get; set; }
-        public double CaloriesBurned => ActivityType.CaloriesPerMinute * Duration; // Tính calo đốt cháy
+        public double CaloriesBurned { get; set; } // Calo đốt cháy
     }
 }

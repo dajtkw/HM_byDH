@@ -1,6 +1,7 @@
 ﻿using HM_byDH.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using static HM_byDH.Models.WeightGoals;
 
 namespace HM_byDH.Data
 {
@@ -19,6 +20,10 @@ namespace HM_byDH.Data
         public DbSet<ActivityType> ActivityTypes { get; set; }
         public DbSet<ActivityEntry> ActivityEntries { get; set; }
         public DbSet<ActivityGoal> ActivityGoals { get; set; }
+        public DbSet<WeightGoal> WeightGoals { get; set; }
+        public DbSet<WeightLog> WeightLogs { get; set; }
+        public DbSet<Advice> Advices { get; set; }
+        public DbSet<Reminder> Reminders { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

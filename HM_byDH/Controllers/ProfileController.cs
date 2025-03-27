@@ -76,7 +76,7 @@ namespace HM_byDH.Controllers
                 }
 
                 user.DateOfBirth = model.DateOfBirth;
-                user.Height = model.Height;
+                user.Height = model.Height;  
                 user.Weight = model.Weight;
 
                 var result = await _userManager.UpdateAsync(user);

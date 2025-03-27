@@ -1,13 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-
-
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace HM_byDH.Models.ViewModels.Activities
 {
-    public class AddActivityEntryViewModel
+    public class EditActivityEntryViewModel
     {
+        public int Id { get; set; }
         [Required(ErrorMessage = "Vui lòng chọn hoạt động")]
         public int ActivityTypeId { get; set; }
 
@@ -19,6 +17,7 @@ namespace HM_byDH.Models.ViewModels.Activities
         public DateTime Date { get; set; }
         [Required(ErrorMessage = "Vui lòng chọn mức cường độ")]
         public string Intensity { get; set; } // Ví dụ: "Nhẹ", "Vừa", "Mạnh"
+        public double CaloriesBurned { get; set; }
 
         [ValidateNever]
         public List<ActivityType> ActivityTypes { get; set; }

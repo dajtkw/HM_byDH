@@ -26,7 +26,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
-
+builder.Services.AddHostedService<ReminderService>();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
