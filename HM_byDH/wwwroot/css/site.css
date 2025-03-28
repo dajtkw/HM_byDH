@@ -1,143 +1,100 @@
-html {
-    font-size: 14px;
-}
-
-@media (min-width: 768px) {
-    html {
-        font-size: 16px;
-    }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-    position: relative;
-    min-height: 100%;
-}
-
 body {
-    margin-bottom: 60px;
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #e6f0fa, #b3d9ff); /* Gradient xanh lam /
+color: #1e3a8a; / Xanh lam đậm */
+    margin: 0;
+    padding: 0;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-    color: var(--bs-secondary-color);
-    text-align: end;
+.navbar {
+    background-color: #3b82f6; /* Xanh lam chủ đạo */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    padding: 15px 0;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-    text-align: start;
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #fff;
+    transition: color 0.3s ease;
 }
 
-/* Cải thiện khoảng cách và kiểu dáng chung */
-.form-group {
-    margin-bottom: 1.5rem;
+    .navbar-brand:hover {
+        color: #cce5ff; /* Xanh lam nhạt */
+    }
+
+.navbar-toggler {
+    border-color: #fff;
 }
 
-.form-control {
-    border-radius: 0.25rem;
-    padding: 0.5rem 1rem;
-    border: 1px solid #ced4da;
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 0.9)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
 
-.form-section {
-    background-color: #f8f9fa;
-    padding: 2rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+.nav-link {
+    font-weight: 500;
+    color: #fff;
+    padding: 10px 15px;
+    transition: color 0.3s ease;
 }
 
-/* Kiểu dáng nút */
+    .nav-link:hover {
+        color: #cce5ff; /* Xanh lam nhạt */
+    }
+
+.dropdown-menu {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+.dropdown-item {
+    color: #1e3a8a; /* Xanh lam đậm */
+    padding: 8px 15px;
+    transition: background-color 0.3s ease;
+}
+
+    .dropdown-item:hover {
+        background-color: #f0f7ff; /* Xanh lam nhạt /
+color: #3b82f6; / Xanh lam chủ đạo */
+    }
+
 .btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
-    border-radius: 0.25rem;
-    padding: 0.5rem 1.5rem;
-    transition: background-color 0.2s;
+    background-color: #3b82f6; /* Xanh lam chủ đạo */
+    border: none;
+    padding: 10px 20px;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
     .btn-primary:hover {
-        background-color: #0056b3;
-        border-color: #004085;
+        background-color: #2563eb; /* Xanh lam đậm hơn */
+        transform: translateY(-2px);
     }
 
-.btn-secondary {
-    background-color: #6c757d;
-    border-color: #6c757d;
-    border-radius: 0.25rem;
-    padding: 0.5rem 1.5rem;
-    transition: background-color 0.2s;
+.btn-outline-primary {
+    border-color: #3b82f6;
+    color: #3b82f6;
+    padding: 10px 20px;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: all 0.3s ease;
 }
 
-    .btn-secondary:hover {
-        background-color: #5a6268;
-        border-color: #545b62;
+    .btn-outline-primary:hover {
+        background-color: #3b82f6;
+        color: #fff;
+        transform: translateY(-2px);
     }
 
-/* Tùy chỉnh dropdown */
-select.form-control {
-    appearance: none;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="%23333" d="M10.293 3.293L6 7.586 1.707 3.293A1 1 0 00.293 4.707l5 5a1 1 0 001.414 0l5-5a1 1 0 10-1.414-1.414z"/></svg>');
-    background-repeat: no-repeat;
-    background-position: right 0.75rem center;
-    padding-right: 2.5rem;
-}
-
-.goal-notification {
-    position: fixed;
-    top: 20%;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #f8f9fa;
-    border: 2px solid #28a745;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-    animation: slideIn 0.5s ease-in-out;
-}
-
-.goal-content {
-    text-align: center;
-}
-
-    .goal-content h3 {
-        color: #28a745;
-        margin-bottom: 10px;
-    }
-
-    .goal-content p {
-        font-size: 1.1em;
-        margin-bottom: 15px;
-    }
-
-@keyframes slideIn {
-    from {
-        top: -100px;
-        opacity: 0;
-    }
-
-    to {
-        top: 20%;
-        opacity: 1;
-    }
-}
-
-.navbar-nav .nav-link {
-    padding: 0.5rem 1rem;
-    transition: color 0.3s;
-}
-
-    .navbar-nav .nav-link:hover {
-        color: #f8f9fa;
-    }
-
-
-body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #f8f9fa;
-    color: #333;
+.user-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    margin-right: 10px;
+    border: 2px solid #cce5ff;
 }
 
 .container {
@@ -146,37 +103,26 @@ body {
 
 main {
     min-height: 70vh;
+    padding: 20px 0;
 }
 
-h1.display-4 {
-    font-weight: 700;
-    color: #007bff;
+footer {
+    background-color: #3b82f6; /* Dùng màu xanh lam chủ đạo cho footer */
+    color: #fff;
+    padding: 20px 0;
+    border-top: 2px solid #2563eb;
 }
 
-p.lead {
-    font-size: 1.25rem;
-    color: #555;
-}
-
-.btn-primary {
-    background-color: #007bff;
-    border: none;
-    padding: 10px 20px;
-    transition: background-color 0.3s;
-}
-
-    .btn-primary:hover {
-        background-color: #0056b3;
+    footer p {
+        margin: 0;
+        font-size: 0.95rem;
     }
 
-.btn-outline-primary {
-    border-color: #007bff;
-    color: #007bff;
-    padding: 10px 20px;
-    transition: all 0.3s;
-}
-
-    .btn-outline-primary:hover {
-        background-color: #007bff;
-        color: #fff;
+    footer a {
+        color: #cce5ff; /* Xanh lam nhạt */
+        text-decoration: none;
+        transition: color 0.3s ease;
     }
+        footer a:hover {
+            color: #fff;
+        }

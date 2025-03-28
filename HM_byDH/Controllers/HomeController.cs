@@ -8,6 +8,7 @@ using HM_byDH.Data;
 using HM_byDH.Models;
 using HM_byDH.Models.ViewModels.Home;
 using HM_byDH.Models.ViewModels.Weight;
+using AspNetCoreGeneratedDocument;
 
 namespace HM_byDH.Controllers
 {
@@ -124,6 +125,10 @@ namespace HM_byDH.Controllers
                 double weightGainedSoFar = currentWeight - initialWeight;
                 return Math.Max(0, Math.Min(100, (weightGainedSoFar / totalWeightToGain) * 100));
             }
+        }
+        public IActionResult Team()
+        {
+            return View();
         }
     }
 }

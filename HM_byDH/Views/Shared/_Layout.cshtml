@@ -107,6 +107,9 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Home" asp-action="Index">Trang chủ</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Team">Đội Ngũ</a>
+                        </li>
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
@@ -172,7 +175,7 @@
 
     <footer class="bg-dark text-white text-center py-3 mt-4">
         <div class="container">
-            <p class="mb-0">© 2025 - HealthApp | Phát triển bởi Nhóm HealthApp</p>
+            <p class="mb-0">© 2025 - HM | Phát triển bởi Nhóm HM_byDH</p>
             <a href="/Home/About" class="text-white text-decoration-none">Về chúng tôi</a>
         </div>
     </footer>
