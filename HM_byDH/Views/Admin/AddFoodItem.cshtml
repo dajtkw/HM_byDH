@@ -1,0 +1,52 @@
+﻿@model HM_byDH.Models.ViewModels.Admin.AddFoodItemViewModel
+
+@{
+    ViewData["Title"] = "Thêm Món Ăn Mới";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h2 class="card-title mb-4">Thêm Món Ăn Mới</h2>
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+            }
+            <form asp-action="AddFoodItem" method="post">
+                <div class="form-group">
+                    <label asp-for="Name" class="form-label">Tên Món</label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Calories" class="form-label">Calo (per 100g)</label>
+                    <input asp-for="Calories" class="form-control" type="number" step="0.1" />
+                    <span asp-validation-for="Calories" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Protein" class="form-label">Protein (g per 100g)</label>
+                    <input asp-for="Protein" class="form-control" type="number" step="0.1" />
+                    <span asp-validation-for="Protein" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Fat" class="form-label">Chất Béo (g per 100g)</label>
+                    <input asp-for="Fat" class="form-control" type="number" step="0.1" />
+                    <span asp-validation-for="Fat" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Carb" class="form-label">Carb (g per 100g)</label>
+                    <input asp-for="Carb" class="form-control" type="number" step="0.1" />
+                    <span asp-validation-for="Carb" class="text-danger"></span>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary mr-2">Thêm</button>
+                    <a asp-action="Dashboard" class="btn btn-secondary">Hủy</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

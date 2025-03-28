@@ -7,7 +7,7 @@ using HM_byDH.Models.ViewModels.Profile;
 
 namespace HM_byDH.Controllers
 {
-    [Authorize] // Chỉ cho phép người dùng đã đăng nhập truy cập
+    [Authorize]
     public class ProfileController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -19,7 +19,6 @@ namespace HM_byDH.Controllers
             _roleManager = roleManager;
         }
 
-        // Xem hồ sơ
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -37,13 +36,14 @@ namespace HM_byDH.Controllers
                 DateOfBirth = user.DateOfBirth,
                 Role = roles.FirstOrDefault() ?? "User",
                 Height = user.Height,
-                Weight = user.Weight
+                Weight = user.Weight,
+                Gender = user.Gender, // Thêm giới tính
+                Age = user.Age        // Tuổi tự tính từ DateOfBirth
             };
 
             return View(model);
         }
 
-        // Cập nhật hồ sơ
         [HttpGet]
         public async Task<IActionResult> Edit()
         {
@@ -57,7 +57,8 @@ namespace HM_byDH.Controllers
             {
                 DateOfBirth = user.DateOfBirth,
                 Height = user.Height,
-                Weight = user.Weight
+                Weight = user.Weight,
+                Gender = user.Gender // Thêm giới tính
             };
 
             return View(model);
@@ -75,9 +76,10 @@ namespace HM_byDH.Controllers
                     return NotFound();
                 }
 
-                user.DateOfBirth = model.DateOfBirth;
-                user.Height = model.Height;  
+                user.DateOfBirth = (DateTime)model.DateOfBirth;
+                user.Height = model.Height;
                 user.Weight = model.Weight;
+                user.Gender = model.Gender; // Lưu giới tính
 
                 var result = await _userManager.UpdateAsync(user);
                 if (result.Succeeded)

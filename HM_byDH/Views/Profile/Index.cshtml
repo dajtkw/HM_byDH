@@ -1,32 +1,140 @@
-﻿@using HM_byDH.Models.ViewModels
-@using HM_byDH.Models.ViewModels.Profile
-@model ProfileViewModel
+﻿@model HM_byDH.Models.ViewModels.Profile.ProfileViewModel
+
 @{
-    ViewData["Title"] = "Hồ sơ người dùng";
+    ViewData["Title"] = "Trang Hồ Sơ";
 }
 
-<h2>Hồ sơ người dùng</h2>
-<div class="card">
-    <div class="card-body">
-        <dl class="row">
-            <dt class="col-sm-3">Họ và tên</dt>
-            <dd class="col-sm-9">@Model.FullName</dd>
+<!-- CSS tùy chỉnh -->
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f4f6f9;
+    }
 
-            <dt class="col-sm-3">Email</dt>
-            <dd class="col-sm-9">@Model.Email</dd>
+    .container {
+        max-width: 900px;
+    }
 
-            <dt class="col-sm-3">Ngày sinh</dt>
-            <dd class="col-sm-9">@(Model.DateOfBirth?.ToString("dd/MM/yyyy") ?? "Chưa cập nhật")</dd>
+    .profile-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        background-color: white;
+        overflow: hidden;
+    }
 
-            <dt class="col-sm-3">Vai trò</dt>
-            <dd class="col-sm-9">@Model.Role</dd>
+    .profile-header {
+        background: linear-gradient(135deg, #007bff, #00c4ff);
+        color: white;
+        text-align: center;
+        padding: 30px 20px;
+        position: relative;
+    }
 
-            <dt class="col-sm-3">Chiều cao</dt>
-            <dd class="col-sm-9">@(Model.Height.HasValue ? $"{Model.Height} cm" : "Chưa cập nhật")</dd>
+    .profile-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 4px solid white;
+        margin-bottom: 15px;
+        background-color: #e9ecef;
+    }
 
-            <dt class="col-sm-3">Cân nặng</dt>
-            <dd class="col-sm-9">@(Model.Weight.HasValue ? $"{Model.Weight} kg" : "Chưa cập nhật")</dd>
-        </dl>
-        <a asp-action="Edit" class="btn btn-primary">Chỉnh sửa hồ sơ</a>
+    .profile-name {
+        font-size: 1.8em;
+        margin: 0;
+    }
+
+    .profile-role {
+        font-size: 1.1em;
+        opacity: 0.8;
+    }
+
+    .profile-body {
+        padding: 30px;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        margin: 15px 0;
+        font-size: 1.1em;
+    }
+
+        .info-item i {
+            margin-right: 10px;
+            color: #007bff;
+            font-size: 1.2em;
+        }
+
+    .btn-custom {
+        background-color: #28a745;
+        color: white;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-custom:hover {
+            background-color: #218838;
+            color: white;
+        }
+</style>
+
+<!-- Nội dung chính -->
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Hồ Sơ Của Bạn</h1>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="profile-card">
+                <!-- Header với avatar và tên -->
+                <div class="profile-header">
+                    <div class="profile-avatar mx-auto"></div>
+                    <h2 class="profile-name">@Model.FullName</h2>
+                    <p class="profile-role">@Model.Role</p>
+                </div>
+
+                <!-- Thông tin chi tiết -->
+                <div class="profile-body">
+                    <div class="info-item">
+                        <i class="bi bi-envelope-fill"></i>
+                        <span><strong>Email:</strong> @Model.Email</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="bi bi-person-fill"></i>
+                        <span><strong>Giới tính:</strong> @(Model.Gender ?? "Chưa cập nhật")</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="bi bi-calendar-event"></i>
+                        <span><strong>Ngày sinh:</strong> @(Model.DateOfBirth.HasValue ? Model.DateOfBirth.Value.ToString("dd/MM/yyyy") : "Chưa cập nhật")</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="bi bi-clock-history"></i>
+                        <span><strong>Tuổi:</strong> @(Model.Age > 0 ? Model.Age.ToString() : "Chưa cập nhật")</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="bi bi-rulers"></i>
+                        <span><strong>Chiều cao:</strong> @(Model.Height > 0 ? $"{Model.Height:F1} cm" : "Chưa cập nhật")</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="bi bi-speedometer2"></i>
+                        <span><strong>Cân nặng:</strong> @(Model.Weight > 0 ? $"{Model.Weight:F1} kg" : "Chưa cập nhật")</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nút chỉnh sửa hồ sơ -->
+            <div class="text-center mt-4">
+                <a asp-action="Edit" class="btn btn-custom">Chỉnh Sửa Hồ Sơ</a>
+            </div>
+        </div>
     </div>
 </div>
+
+<!-- Thêm Bootstrap, Bootstrap Icons và Google Fonts -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>

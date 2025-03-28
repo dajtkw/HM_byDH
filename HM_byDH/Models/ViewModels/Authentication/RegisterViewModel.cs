@@ -21,5 +21,11 @@ namespace HM_byDH.Models.ViewModels.Authentication
         [Required(ErrorMessage = "Họ và tên là bắt buộc.")]
         [StringLength(100, ErrorMessage = "Họ và tên không được vượt quá 100 ký tự.")]
         public string FullName { get; set; } // Thêm trường này
+        [Required(ErrorMessage = "Vui lòng chọn giới tính")]
+        public string Gender { get; set; }
+
+        [Required(ErrorMessage = "Vui lòng nhập ngày sinh")]
+        [DataType(DataType.Date)]
+        public DateTime DateOfBirth { get; set; }
     }
 }

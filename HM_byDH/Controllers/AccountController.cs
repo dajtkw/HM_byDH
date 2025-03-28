@@ -34,12 +34,15 @@ namespace HM_byDH.Controllers
                 {
                     UserName = model.Email,
                     Email = model.Email,
-                    FullName = model.FullName // Gán giá trị FullName
+                    FullName = model.FullName, // Gán giá trị FullName
+                    Gender = model.Gender, // Lưu giới tính
+                    DateOfBirth = model.DateOfBirth // Lưu ngày sinh
                 };
                 var result = await _userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(user, "User");
                     var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var confirmationLink = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, token }, protocol: Request.Scheme);
 
@@ -112,6 +115,12 @@ namespace HM_byDH.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
+                    var userRedirect = await _userManager.FindByEmailAsync(model.Email);
+                    // Kiểm tra vai trò Admin
+                    if (await _userManager.IsInRoleAsync(userRedirect, "Admin"))
+                    {
+                        return RedirectToAction("Dashboard", "Admin");
+                    }
                     return RedirectToAction("Index", "Home");
                 }
                 ModelState.AddModelError(string.Empty, "Đăng nhập không thành công. Kiểm tra lại email hoặc password");
@@ -236,6 +245,39 @@ namespace HM_byDH.Controllers
                 $"Vui lòng xác nhận email bằng cách nhấp <a href='{confirmationLink}'>vào đây</a>.");
 
             return RedirectToAction("RegisterConfirmation", new { email });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateAdmin()
+        {
+            // Kiểm tra xem tài khoản admin đã tồn tại chưa
+            var adminUser = await _userManager.FindByEmailAsync("admin@gmail.com");
+            if (adminUser != null)
+            {
+                return Content("Tài khoản admin đã tồn tại.");
+            }
+
+            // Tạo người dùng admin mới
+            adminUser = new ApplicationUser
+            {
+                UserName = "admin@gmail.com",
+                Email = "admin@gmail.com",
+                FullName = "Admin",
+                EmailConfirmed = true, // Bỏ qua xác nhận email
+                Gender = "Unknown",    // Giá trị mặc định
+                DateOfBirth = new DateTime(2025, 1, 1) // Giá trị mặc định
+            };
+
+            var result = await _userManager.CreateAsync(adminUser, "Admin@123");
+            if (result.Succeeded)
+            {
+                // Gán vai trò "Admin" cho người dùng
+                await _userManager.AddToRoleAsync(adminUser, "Admin");
+                return Content("Tài khoản admin đã được tạo thành công.");
+            }
+
+            // Hiển thị lỗi nếu có
+            return Content("Không thể tạo tài khoản admin: " + string.Join(", ", result.Errors.Select(e => e.Description)));
         }
 
     }

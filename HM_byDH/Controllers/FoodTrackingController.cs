@@ -79,6 +79,49 @@ namespace HM_byDH.Controllers
             model.TotalFat = model.FoodEntries.Sum(fe => fe.Fat);
             model.TotalCarb = model.FoodEntries.Sum(fe => fe.Carb);
 
+            double userWeight = user.CurrentWeight;
+            double userHeight = user.Height ?? 0.0; // Nếu null thì mặc định = 0.0
+            int userAge = user.Age; // Giả sử Age luôn có giá trị
+
+            //Tính maintenance calories bằng công thức Mifflin-St Jeor
+
+            double bmr = 0;
+            if (userWeight > 0 && userHeight > 0 && userAge > 0)
+            {
+                if (user.Gender == "Male")
+                {
+                    bmr = (10 * userWeight + 6.25 * userHeight - 5 * userAge + 5);
+                }
+                else if (user.Gender == "Female")
+                {
+                    bmr = (10 * userWeight + 6.25 * userHeight - 5 * userAge - 161);
+                }
+                // Nếu giới tính người dùng chưa xác định hợp lệ thì bmr giữ nguyên = 0
+            }
+            double maintenanceCalories = bmr * 1.2;
+            model.MaintenanceCalories = maintenanceCalories;
+
+            // Lấy mục tiêu cân nặng và tính daily calories target
+            var goal = await _context.WeightGoals
+                .Where(g => g.UserId == user.Id && g.StartDate <= selectedDate && g.EndDate >= selectedDate)
+                .FirstOrDefaultAsync();
+            if (goal != null)
+            {
+                double adjustment = goal.DailyCaloriesTarget;
+                if (goal.TargetWeight < goal.InitialWeight) // Giảm cân
+                {
+                    model.DailyCaloriesTarget = maintenanceCalories - adjustment;
+                }
+                else // Tăng cân
+                {
+                    model.DailyCaloriesTarget = maintenanceCalories + adjustment;
+                }
+            }
+            else
+            {
+                model.DailyCaloriesTarget = maintenanceCalories;
+            }
+
             return View(model);
         }
 
@@ -106,18 +149,33 @@ namespace HM_byDH.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await _userManager.GetUserAsync(User);
-                var foodEntry = new FoodEntry
+                try
                 {
-                    UserId = user.Id,
-                    FoodItemId = model.FoodItemId,
-                    Quantity = model.Quantity,
-                    Date = model.Date
-                };
-                _context.FoodEntries.Add(foodEntry);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Index", new { date = model.Date });
+                    var user = await _userManager.GetUserAsync(User);
+                    if (user == null)
+                    {
+                        return NotFound("Không tìm thấy người dùng.");
+                    }
+
+                    var foodEntry = new FoodEntry
+                    {
+                        UserId = user.Id,
+                        FoodItemId = model.FoodItemId,
+                        Quantity = model.Quantity,
+                        Date = model.Date
+                    };
+
+                    _context.FoodEntries.Add(foodEntry);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Index", new { date = model.Date });
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", $"Lỗi khi lưu dữ liệu: {ex.Message}");
+                }
             }
+
+            // Nếu ModelState không hợp lệ hoặc lỗi, hiển thị lại view với thông tin lỗi
             model.FoodItems = await _context.FoodItems.ToListAsync();
             return View(model);
         }

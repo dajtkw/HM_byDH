@@ -1,35 +1,151 @@
-﻿@using HM_byDH.Models.ViewModels
-@using HM_byDH.Models.ViewModels.Profile
-@model EditProfileViewModel
+﻿@model HM_byDH.Models.ViewModels.Profile.EditProfileViewModel
+
 @{
-    ViewData["Title"] = "Chỉnh sửa hồ sơ";
+    ViewData["Title"] = "Chỉnh Sửa Hồ Sơ";
 }
 
-<h2>Chỉnh sửa hồ sơ</h2>
-<form asp-action="Edit" method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<!-- CSS tùy chỉnh -->
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f4f6f9;
+    }
 
-    <div class="form-group">
-        <label asp-for="DateOfBirth"></label>
-        <input asp-for="DateOfBirth" class="form-control" type="date" />
-        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+    .container {
+        max-width: 900px;
+    }
+
+    .edit-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        background-color: white;
+        overflow: hidden;
+    }
+
+    .edit-header {
+        background: linear-gradient(135deg, #007bff, #00c4ff);
+        color: white;
+        text-align: center;
+        padding: 20px;
+        position: relative;
+    }
+
+    .edit-title {
+        font-size: 1.8em;
+        margin: 0;
+    }
+
+    .edit-body {
+        padding: 30px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        font-weight: bold;
+        color: #333;
+    }
+
+    .form-control {
+        border-radius: 5px;
+        padding: 10px;
+        font-size: 1.1em;
+    }
+
+    .btn-custom {
+        background-color: #28a745;
+        color: white;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-custom:hover {
+            background-color: #218838;
+            color: white;
+        }
+
+    .btn-cancel {
+        background-color: #6c757d;
+        color: white;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-cancel:hover {
+            background-color: #5a6268;
+            color: white;
+        }
+
+    .text-danger {
+        font-size: 0.9em;
+    }
+</style>
+
+<!-- Nội dung chính -->
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="edit-card">
+                <!-- Header -->
+                <div class="edit-header">
+                    <h2 class="edit-title">Chỉnh Sửa Hồ Sơ</h2>
+                </div>
+
+                <!-- Form chỉnh sửa -->
+                <div class="edit-body">
+                    <form asp-action="Edit" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="form-group">
+                            <label asp-for="Gender" class="form-label">Giới tính</label>
+                            <select asp-for="Gender" class="form-control">
+                                <option value="Male">Nam</option>
+                                <option value="Female">Nữ</option>
+                            </select>
+                            <span asp-validation-for="Gender" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="DateOfBirth" class="form-label">Ngày sinh</label>
+                            <input asp-for="DateOfBirth" type="date" class="form-control" />
+                            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Height" class="form-label">Chiều cao (cm)</label>
+                            <input asp-for="Height" class="form-control" type="number" step="0.1" />
+                            <span asp-validation-for="Height" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Weight" class="form-label">Cân nặng (kg)</label>
+                            <input asp-for="Weight" class="form-control" type="number" step="0.1" />
+                            <span asp-validation-for="Weight" class="text-danger"></span>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-custom">Lưu Thay Đổi</button>
+                            <a asp-action="Index" class="btn btn-cancel">Hủy</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
-    <div class="form-group">
-        <label asp-for="Height"></label>
-        <input asp-for="Height" class="form-control" />
-        <span asp-validation-for="Height" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Weight"></label>
-        <input asp-for="Weight" class="form-control" />
-        <span asp-validation-for="Weight" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-    <a asp-action="Index" class="btn btn-secondary">Hủy</a>
-</form>
+<!-- Thêm Bootstrap, Bootstrap Icons và Google Fonts -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

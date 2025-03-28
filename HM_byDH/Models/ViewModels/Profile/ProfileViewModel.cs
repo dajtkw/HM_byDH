@@ -8,5 +8,7 @@
         public string Role { get; set; }
         public double? Height { get; set; }
         public double? Weight { get; set; }
+        public string Gender { get; set; } // Thêm giới tính
+        public int Age { get; set; }       // Thêm tuổi
     }
 }

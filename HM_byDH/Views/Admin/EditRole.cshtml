@@ -1,0 +1,32 @@
+﻿@model HM_byDH.Models.ViewModels.Admin.EditRoleViewModel
+
+@{
+    ViewData["Title"] = "Chỉnh Sửa Vai Trò";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h2 class="card-title mb-4">Chỉnh Sửa Vai Trò</h2>
+            <form asp-action="EditRole" method="post">
+                <input type="hidden" asp-for="UserId" />
+                <div class="form-group">
+                    <label class="form-label">Vai Trò Hiện Tại</label>
+                    <p class="form-control-static"><strong>@Model.CurrentRole</strong></p>
+                </div>
+                <div class="form-group">
+                    <label asp-for="NewRole" class="form-label">Vai Trò Mới</label>
+                    <select asp-for="NewRole" class="form-control">
+                        <option value="User">User</option>
+                        <option value="Admin">Admin</option>
+                    </select>
+                    <span asp-validation-for="NewRole" class="text-danger"></span>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary mr-2">Lưu</button>
+                    <a asp-action="UserList" class="btn btn-secondary">Hủy</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

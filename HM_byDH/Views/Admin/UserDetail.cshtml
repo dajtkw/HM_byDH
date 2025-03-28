@@ -1,0 +1,32 @@
+﻿@model HM_byDH.Models.ViewModels.Admin.UserDetailViewModel
+
+@{
+    ViewData["Title"] = "Chi Tiết Người Dùng";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h2 class="card-title mb-4">Chi Tiết Người Dùng</h2>
+            <dl class="row">
+                <dt class="col-sm-3">Họ Tên:</dt>
+                <dd class="col-sm-9">@Model.FullName</dd>
+                <dt class="col-sm-3">Email:</dt>
+                <dd class="col-sm-9">@Model.Email</dd>
+                <dt class="col-sm-3">Ngày Sinh:</dt>
+                <dd class="col-sm-9">@Model.DateOfBirth?.ToString("dd/MM/yyyy")</dd>
+                <dt class="col-sm-3">Giới Tính:</dt>
+                <dd class="col-sm-9">@Model.Gender</dd>
+                <dt class="col-sm-3">Chiều Cao:</dt>
+                <dd class="col-sm-9">@Model.Height cm</dd>
+                <dt class="col-sm-3">Cân Nặng:</dt>
+                <dd class="col-sm-9">@Model.Weight kg</dd>
+                <dt class="col-sm-3">Vai Trò:</dt>
+                <dd class="col-sm-9">@Model.Role</dd>
+            </dl>
+            <div class="text-center">
+                <a asp-action="UserList" class="btn btn-secondary">Quay Lại</a>
+            </div>
+        </div>
+    </div>
+</div>

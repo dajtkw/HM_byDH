@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h2 class="card-title text-center mb-4">Chào mừng đến với Admin Dashboard</h2>
+            <p class="text-muted text-center">Quản lý hệ thống dễ dàng với các chức năng dưới đây:</p>
+            <div class="d-flex flex-column align-items-center">
+                <a asp-controller="Admin" asp-action="UserList" class="btn btn-primary btn-lg mb-3 w-50">Quản lý người dùng</a>
+                <a asp-controller="Admin" asp-action="AddFoodItem" class="btn btn-primary btn-lg mb-3 w-50">Thêm món ăn mới</a>
+                <a asp-controller="Admin" asp-action="AddActivityType" class="btn btn-primary btn-lg mb-3 w-50">Thêm hoạt động thể chất mới</a>
+            </div>
+        </div>
+    </div>
+</div>

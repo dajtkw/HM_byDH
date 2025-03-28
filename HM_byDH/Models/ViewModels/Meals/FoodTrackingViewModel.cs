@@ -10,6 +10,8 @@
         public double TotalCarb { get; set; }
         public DateTime SelectedDate { get; set; }
         public bool IsWaterGoalMet { get; set; }
+        public double MaintenanceCalories { get; set; } // Calo duy trì
+        public double DailyCaloriesTarget { get; set; } // Tổng calo cần thiết
         public Dictionary<DateTime, DailySummary> WeeklySummary { get; set; }
     }
 }

@@ -1,0 +1,37 @@
+﻿@model HM_byDH.Models.ViewModels.Admin.AddActivityTypeViewModel
+
+@{
+    ViewData["Title"] = "Thêm Hoạt Động Thể Chất Mới";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h2 class="card-title mb-4">Thêm Hoạt Động Thể Chất Mới</h2>
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+            }
+            <form asp-action="AddActivityType" method="post">
+                <div class="form-group">
+                    <label asp-for="Name" class="form-label">Tên Hoạt Động</label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CaloriesPerMinute" class="form-label">Calo Đốt Cháy Mỗi Phút</label>
+                    <input asp-for="CaloriesPerMinute" class="form-control" type="number" step="0.1" />
+                    <span asp-validation-for="CaloriesPerMinute" class="text-danger"></span>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary mr-2">Thêm</button>
+                    <a asp-action="Dashboard" class="btn btn-secondary">Hủy</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
